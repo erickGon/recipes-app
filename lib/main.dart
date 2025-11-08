@@ -43,7 +43,7 @@ class MyApp extends ConsumerWidget {
         }
         return null;
       },
-      routes: [
+      routes: [ // routes are the pages that the app will navigate to
         GoRoute(
           path: '/login',
           builder: (context, state) => const LoginScreen(),

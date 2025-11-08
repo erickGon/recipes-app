@@ -15,13 +15,13 @@ class RecipesPaginationState {
 
   const RecipesPaginationState({
     this.recipes = const [],
-    this.isLoading = false,
-    this.isLoadingMore = false,
-    this.hasError = false,
-    this.errorMessage,
-    this.hasMore = true,
-    this.currentPage = 0,
-    this.filters = const RecipeFilters(),
+    this.isLoading = false, // isLoading is true when the app is loading the recipes
+    this.isLoadingMore = false, // isLoadingMore is true when the app is loading the next page of recipes
+    this.hasError = false, // hasError is true when there is an error loading the recipes
+    this.errorMessage, // errorMessage is the error message that is displayed to the user
+    this.hasMore = true, // hasMore is true when there are more recipes to load
+    this.currentPage = 0, // currentPage is the current page of recipes that are loaded
+    this.filters = const RecipeFilters(), // filters are the filters that are applied to the recipes
   });
 
   RecipesPaginationState copyWith({
@@ -34,7 +34,7 @@ class RecipesPaginationState {
     int? currentPage,
     RecipeFilters? filters,
   }) {
-    return RecipesPaginationState(
+    return RecipesPaginationState( // copyWith is a method that returns a new instance of the RecipesPaginationState with the new values
       recipes: recipes ?? this.recipes,
       isLoading: isLoading ?? this.isLoading,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
@@ -49,7 +49,7 @@ class RecipesPaginationState {
 
 // Provider for the API service
 final recipeApiServiceProvider = Provider<RecipeApiService>((ref) {
-  return RecipeApiService(ref);
+  return RecipeApiService(ref); // RecipeApiService is the API service that is used to fetch the recipes
 });
 
 class RecipesPaginationNotifier extends StateNotifier<RecipesPaginationState> {
@@ -111,7 +111,7 @@ class RecipesPaginationNotifier extends StateNotifier<RecipesPaginationState> {
       return;
     }
 
-    state = state.copyWith(isLoadingMore: true, hasError: false);
+    state = state.copyWith(isLoadingMore: true, hasError: false); 
 
     try {
       final nextPage = state.currentPage + 1;

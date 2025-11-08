@@ -37,15 +37,8 @@ class RecipeApiService {
       final authNotifier = _ref.read(authProvider.notifier);
       final token = await authNotifier.getValidToken();
       
-      if (token != null) {
-        debugPrint('Valid auth token retrieved');
-      } else {
-        debugPrint('No auth token available');
-      }
-      
       return token;
     } catch (e) {
-      debugPrint('Error getting auth token: $e');
       return null;
     }
   }
@@ -61,28 +54,15 @@ class RecipeApiService {
       'limit': limit.toString(),
     };
 
-    debugPrint('=== API Request: Fetch Recipes Page ===');
-    debugPrint('Mode: ${useMockData ? "MOCK DATA" : "REAL API"}');
-    debugPrint('Page: $page, Limit: $limit');
-    debugPrint('Query Parameters: $queryParams');
-
     try {
       if (useMockData) {
         final response = await _fetchMockPaginated(queryParams);
-        debugPrint('Mock response: page ${response.page} / ${response.totalPages}, '
-            'items ${response.data.length} of ${response.total}');
-        debugPrint('=== End API Request ===');
         return response;
       }
 
       final response = await _fetchFromApi(queryParams);
-      debugPrint('API response: page ${response.page} / ${response.totalPages}, '
-          'items ${response.data.length} of ${response.total}');
-      debugPrint('=== End API Request ===');
       return response;
     } catch (e) {
-      debugPrint('ERROR: Failed to fetch recipes: $e');
-      debugPrint('=== API Request Failed ===');
       throw Exception('Failed to fetch recipes: $e');
     }
   }
@@ -145,32 +125,14 @@ class RecipeApiService {
       if (token != null) 'Authorization': 'Bearer $token',
     };
     
-    debugPrint('API Request Details:');
-    debugPrint('  Method: GET');
-    debugPrint('  URL: $uri');
-    debugPrint('  Headers: $headers');
-    debugPrint('  Token included: ${token != null}');
-    if (token != null) {
-      debugPrint('  Token preview: ${token.substring(0, 30)}...');
-    }
-    debugPrint('Making HTTP request...');
-    
     final response = await http.get(
       uri,
       headers: headers,
     );
     
-    debugPrint('API Response Received:');
-    debugPrint('  Status Code: ${response.statusCode}');
-    debugPrint('  Response Headers: ${response.headers}');
-    debugPrint('  Response Body Length: ${response.body.length} bytes');
-    debugPrint('  Response Body Preview: ${response.body.substring(0, response.body.length > 200 ? 200 : response.body.length)}...');
-    
     if (response.statusCode == 200) {
-      debugPrint('Parsing JSON response...');
       final Map<String, dynamic> jsonBody = json.decode(response.body);
       final List<dynamic> data = jsonBody['data'] as List<dynamic>? ?? [];
-      debugPrint('JSON parsed successfully: ${data.length} items');
 
       final recipes = data.map((item) => _recipeFromJson(item)).toList();
 
@@ -188,11 +150,8 @@ class RecipeApiService {
       );
     } else if (response.statusCode == 401) {
       // Token expired or invalid - try refreshing token and retry once
-      debugPrint('401 Unauthorized - Token may be expired, refreshing...');
-      
       final newToken = await _getAuthToken();
       if (newToken != null && newToken != token) {
-        debugPrint('Retrying request with refreshed token...');
         
         final retryHeaders = {
           'Content-Type': 'application/json',
@@ -202,7 +161,6 @@ class RecipeApiService {
         final retryResponse = await http.get(uri, headers: retryHeaders);
         
         if (retryResponse.statusCode == 200) {
-          debugPrint('Retry successful with refreshed token');
           final Map<String, dynamic> jsonBody = json.decode(retryResponse.body);
           final List<dynamic> data = jsonBody['data'] as List<dynamic>? ?? [];
           final recipes = data.map((item) => _recipeFromJson(item)).toList();
@@ -215,16 +173,12 @@ class RecipeApiService {
             totalPages: jsonBody['totalPages'] as int? ?? 1,
           );
         } else {
-          debugPrint('Retry failed with status ${retryResponse.statusCode}');
           throw Exception('Unauthorized: ${retryResponse.statusCode}');
         }
       } else {
-        debugPrint('No valid token available for retry');
         throw Exception('Unauthorized: Token expired');
       }
     } else {
-      debugPrint('ERROR: API returned status ${response.statusCode}');
-      debugPrint('Error body: ${response.body}');
       throw Exception('Failed to load recipes: ${response.statusCode}');
     }
   }
@@ -281,8 +235,6 @@ class RecipeApiService {
         notes: json['notes'] as String,
       );
     } catch (e) {
-      debugPrint('ERROR parsing recipe JSON: $e');
-      debugPrint('Problematic JSON: $json');
       rethrow;
     }
   }

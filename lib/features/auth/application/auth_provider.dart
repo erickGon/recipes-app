@@ -29,7 +29,6 @@ class AuthNotifier extends StateNotifier<User?> {
     try {
       final currentUser = _auth.currentUser;
       if (currentUser == null) {
-        debugPrint('No current user, cannot get token');
         return null;
       }
 
@@ -37,13 +36,11 @@ class AuthNotifier extends StateNotifier<User?> {
       final token = await currentUser.getIdToken(true);
       
       if (token != null) {
-        debugPrint('Token refreshed successfully');
         await _safeWriteToken(token);
       }
       
       return token;
     } catch (e) {
-      debugPrint('Error getting valid token: $e');
       return null;
     }
   }
@@ -64,12 +61,11 @@ class AuthNotifier extends StateNotifier<User?> {
       // Now write the new token
       await _secureStorage.write(key: _tokenKey, value: token);
     } catch (e) {
-      debugPrint('Error in _safeWriteToken: $e');
       // If all else fails, just try to write anyway
       try {
         await _secureStorage.write(key: _tokenKey, value: token);
       } catch (finalError) {
-        debugPrint('Final write attempt failed: $finalError');
+        throw Exception('Failed to write token: $finalError');
       }
     }
   }
@@ -83,7 +79,7 @@ class AuthNotifier extends StateNotifier<User?> {
         try {
           await _secureStorage.delete(key: _tokenKey);
         } catch (e) {
-          debugPrint('Error deleting token: $e');
+          throw Exception('Failed to delete token: $e');
         }
       } else {
         // Only update state, don't store token here
@@ -109,18 +105,12 @@ class AuthNotifier extends StateNotifier<User?> {
       
       final fbUser = credential.user;
       if (fbUser == null) {
-        debugPrint('ERROR: Firebase user is null after login');
         return false;
       }
       
-      try {
-        final token = await fbUser.getIdToken();
-        if (token != null) {
-          await _safeWriteToken(token);
-        }
-      } catch (e) {
-        debugPrint('Error storing token: $e');
-        // Continue even if token storage fails
+      final token = await fbUser.getIdToken();
+      if (token != null) {
+        await _safeWriteToken(token);
       }
       
       state = User(
@@ -131,10 +121,8 @@ class AuthNotifier extends StateNotifier<User?> {
       return true;
       
     } on fb.FirebaseAuthException catch (e) {
-      
       return false;
     } catch (e) {
-      debugPrint('Unexpected error during login: $e');
       return false;
     }
   }
@@ -144,8 +132,6 @@ class AuthNotifier extends StateNotifier<User?> {
     try {
       await _auth.signOut();
       await _secureStorage.delete(key: _tokenKey);
-    } catch (e) {
-      debugPrint('Error during logout: $e');
     } finally {
       state = null;
     }

@@ -1,22 +1,22 @@
-# Medical Recipes App
+# Aplicación de Recetas Médicas
 
-A Flutter application for managing medical prescriptions with Firebase Authentication, paginated API integration, and modern Material Design 3 UI.
+Aplicación Flutter para gestionar prescripciones médicas con autenticación de Firebase, integración con API paginada y una interfaz moderna basada en Material Design 3.
 
-## Features
+## Funcionalidades
 
-- 🔐 **Firebase Authentication**: Email/password login with secure token storage
-- 💊 **Medical Prescriptions**: View and manage prescription records
-- 🔍 **Advanced Filtering**: Search by medication name and date range
-- 📄 **Infinite Scroll Pagination**: Automatic page loading as user scrolls
-- 🎨 **Dark/Light Theme**: Toggle with persistent preference
-- 📱 **Pull-to-Refresh**: Update data with a simple pull gesture
-- 🔒 **Secure API Calls**: Authenticated requests with Firebase ID tokens
-- 📊 **Detailed View**: Modal showing complete prescription information
-- ✅ **Comprehensive Tests**: 28 unit tests covering core functionality
+- 🔐 **Autenticación Firebase**: Inicio de sesión con correo y contraseña, almacenamiento seguro del token
+- 💊 **Recetas Médicas**: Consulta y gestión de prescripciones clínicas
+- 🔍 **Filtro Avanzado**: Búsqueda por nombre del medicamento y rango de fechas
+- 📄 **Paginación Infinita**: Carga automática de páginas al desplazarse
+- 🎨 **Tema Claro/Oscuro**: Conmutador con preferencia persistente
+- 📱 **Pull-to-Refresh**: Actualiza los datos con un gesto de arrastre
+- 🔒 **Llamadas a API Seguras**: Peticiones autenticadas con ID tokens de Firebase
+- 📊 **Vista Detallada**: Modal con información completa de cada receta
+- ✅ **Pruebas Completas**: 28 tests unitarios que cubren la funcionalidad principal
 
-## Architecture
+## Arquitectura
 
-Built with **Clean Architecture** using a **feature-based** folder structure:
+Basada en **Clean Architecture** con una estructura de carpetas orientada por funcionalidades:
 
 ```
 lib/
@@ -50,34 +50,34 @@ lib/
                 └── recipe_filter_section.dart # Filter UI
 ```
 
-## Tech Stack
+## Stack Tecnológico
 
 - **Flutter SDK**: 3.35.7
 - **State Management**: Riverpod (2.6.1)
 - **Routing**: GoRouter (14.8.1)
 - **Backend**: Firebase (Auth, Core)
-- **Networking**: HTTP client with Bearer token auth
-- **Security**: Flutter Secure Storage for token persistence
-- **Theme**: SharedPreferences for theme persistence
+- **Networking**: Cliente HTTP con autenticación Bearer
+- **Seguridad**: Flutter Secure Storage para persistencia del token
+- **Tema**: SharedPreferences para guardar la preferencia
 
-## Getting Started
+## Primeros Pasos
 
-### Prerequisites
+### Requisitos Previos
 
-- Flutter SDK 3.9.2 or higher
-- Firebase project with Authentication enabled
-- Backend API endpoint (optional - can use mock data)
+- Flutter SDK 3.9.2 o superior
+- Proyecto de Firebase con Authentication habilitado
+- Endpoint de API backend (opcional: puede usarse el modo mock)
 
-### Installation
+### Instalación
 
-1. **Clone and install dependencies**:
+1. **Clonar e instalar dependencias**:
 
 ```bash
 cd recepies_app
 flutter pub get
 ```
 
-2. **iOS Setup** (if running on iOS):
+2. **Configuración iOS** (si se ejecuta en iOS):
 
 ```bash
 cd ios
@@ -85,13 +85,13 @@ pod install
 cd ..
 ```
 
-3. **Configure Firebase** (already set up):
+3. **Configurar Firebase** (ya incluido en el repositorio):
 
    - Android: `android/app/google-services.json` ✓
    - iOS: `ios/Runner/GoogleService-Info.plist` ✓
    - macOS: `macos/Runner/GoogleService-Info.plist` ✓
 
-4. **Run the app**:
+4. **Ejecutar la aplicación**:
 
 ```bash
 # Default (with current settings)
@@ -104,25 +104,25 @@ flutter run --dart-define=API_BASE_URL=https://your-api.com --dart-define=USE_MO
 flutter run --dart-define=USE_MOCK_DATA=true
 ```
 
-## Configuration
+## Configuración
 
-### Environment Variables
+### Variables de Entorno
 
-The app supports compile-time environment variables for flexible configuration across different environments:
+La app admite variables de entorno en tiempo de compilación para adaptar la configuración en distintos entornos:
 
-#### Backend Configuration
+#### Configuración Backend
 
-- `API_BASE_URL`: Backend API endpoint (default: `http://localhost:3000`)
-- `USE_MOCK_DATA`: Use local mock JSON instead of API (default: `false`)
+- `API_BASE_URL`: Endpoint del backend (por defecto `http://localhost:3000`)
+- `USE_MOCK_DATA`: Usa datos mock locales en lugar de llamar al API (por defecto `false`)
 
-#### Demo Credentials (Optional)
+#### Credenciales Demo (Opcional)
 
-- `DEMO_EMAIL`: Email for "Use Demo Credentials" button
-- `DEMO_PASSWORD`: Password for "Use Demo Credentials" button
+- `DEMO_EMAIL`: Correo para el botón “Use Demo Credentials”
+- `DEMO_PASSWORD`: Contraseña para el botón “Use Demo Credentials”
 
-**Note**: The demo credentials button only appears when both `DEMO_EMAIL` and `DEMO_PASSWORD` are provided. This keeps production builds clean while enabling quick testing in development.
+**Nota**: El botón de credenciales demo solo aparece cuando se definen ambas variables. Así evitamos exponer credenciales en producción y facilitamos las pruebas en desarrollo.
 
-**Examples**:
+**Ejemplos**:
 
 ```bash
 # Production (no demo button)
@@ -138,34 +138,34 @@ flutter run \
 
 ```
 
-### Mock Data Mode
+### Modo Mock
 
-When `USE_MOCK_DATA=true`, the app loads prescriptions from `assets/mock_recipes.json` instead of making API calls. Perfect for:
+Cuando `USE_MOCK_DATA=true`, la app carga recetas desde `assets/mock_recipes.json` en lugar de llamar al API. Ideal para:
 
-- Offline development
-- UI testing
-- Demo purposes
+- Desarrollo sin conexión
+- Pruebas de UI
+- Demos rápidas
 
-## API Integration
+## Integración con la API
 
-### Expected Backend Endpoints
+### Endpoints Esperados
 
 #### GET /recipes
 
-**Query Parameters**:
+**Parámetros de consulta**:
 
-- `medicationName` (string, optional): Filter by medication name
-- `startDate` (YYYY-MM-DD, optional): Filter from this date
-- `endDate` (YYYY-MM-DD, optional): Filter until this date
-- `page` (int, required): Page number (1-indexed)
-- `limit` (int, required): Items per page
+- `medicationName` (string, opcional): Filtra por nombre del medicamento
+- `startDate` (YYYY-MM-DD, opcional): Filtra a partir de esta fecha
+- `endDate` (YYYY-MM-DD, opcional): Filtra hasta esta fecha
+- `page` (int, requerido): Número de página (base 1)
+- `limit` (int, requerido): Elementos por página
 
-**Headers**:
+**Encabezados**:
 
 - `Content-Type: application/json`
 - `Authorization: Bearer <firebase_id_token>`
 
-**Response Format**:
+**Respuesta esperada**:
 
 ```json
 {
@@ -186,11 +186,11 @@ When `USE_MOCK_DATA=true`, the app loads prescriptions from `assets/mock_recipes
 }
 ```
 
-### Firebase Token Verification (Backend)
+### Verificación de Token Firebase (Backend)
 
-Your backend should verify Firebase ID tokens using Firebase Admin SDK:
+El backend debe validar los ID tokens de Firebase usando el SDK Admin.
 
-**Node.js Example**:
+**Ejemplo en Node.js**:
 
 ```javascript
 const admin = require('firebase-admin');
@@ -208,43 +208,43 @@ app.use(async (req, res, next) => {
 });
 ```
 
-## Usage
+## Uso
 
-### Login
+### Inicio de Sesión
 
-1. Enter email (format: `string@string.string`)
-2. Enter password (requirements):
-   - At least 6 characters
-   - One uppercase letter
-   - One lowercase letter
-   - One special character (!@#$%^&\*(),.?":{}|<>)
-3. Click "Sign In" or use "Use Demo Credentials"
-4. Firebase authenticates and stores token securely
+1. Introducir correo (formato `string@string.string`)
+2. Introducir contraseña (requisitos):
+   - Mínimo 6 caracteres
+   - Una letra mayúscula
+   - Una letra minúscula
+   - Un carácter especial (!@#$%^&\*(),.?":{}|<>)
+3. Pulsar “Sign In” o “Use Demo Credentials”
+4. Firebase autentica y almacena el token de forma segura
 
-### Prescriptions List
+### Lista de Recetas
 
-**Features**:
+**Características**:
 
-- **Search**: Filter by medication name
-- **Date Range**: Select start and end dates
-- **Apply Filters**: Click button to fetch filtered results from API
-- **Clear Filters**: Reset all filters and reload data
-- **Infinite Scroll**: Automatically loads next page when scrolling near bottom
-- **Pull to Refresh**: Pull down to reload current page
-- **Details Modal**: Tap any prescription to see full details
-- **Dark Mode**: Toggle theme with persistent preference
+- **Búsqueda**: Filtra por nombre del medicamento
+- **Rango de Fechas**: Selecciona fecha inicial y final
+- **Aplicar Filtros**: Botón que dispara la petición filtrada al API
+- **Limpiar Filtros**: Restablece filtros y recarga datos
+- **Scroll Infinito**: Carga la siguiente página al llegar al final
+- **Pull-to-Refresh**: Arrastre hacia abajo para refrescar
+- **Modal de Detalle**: Toca una receta para ver toda la información
+- **Modo Oscuro**: Conmutador con preferencia persistente
 
-**Filter Workflow**:
+**Flujo de Filtros**:
 
-1. Type medication name, select dates
-2. Click "Apply Filters" → API request with query params
-3. Results load with pagination support
-4. Scroll down → auto-loads next page
-5. Pull down → refreshes current filters
+1. Escribe el nombre del medicamento y selecciona las fechas
+2. Pulsa “Apply Filters” → se envía la petición con los parámetros
+3. Los resultados se cargan con soporte de paginación
+4. Desplázate hacia abajo → se carga automáticamente la siguiente página
+5. Arrastra hacia abajo → se refrescan los datos con los filtros vigentes
 
-## Data Models
+## Modelos de Datos
 
-### Recipe (Prescription)
+### Recipe (Receta Médica)
 
 ```dart
 class Recipe {
@@ -266,30 +266,30 @@ class User {
 }
 ```
 
-## State Management
+## Gestión de Estado
 
 ### Authentication (`authProvider`)
 
-- Manages Firebase auth state
-- Stores ID tokens in secure storage
-- Syncs with Firebase auth state changes
-- Handles login/logout
+- Controla el estado de autenticación de Firebase
+- Guarda los ID tokens en almacenamiento seguro
+- Sincroniza con los cambios de sesión
+- Gestiona login y logout
 
 ### Recipes Pagination (`recipesPaginationProvider`)
 
-- Manages paginated recipe list
-- Handles infinite scroll
-- Applies server-side filtering
-- Tracks loading states (initial, loading more, error)
+- Administra la lista paginada de recetas
+- Controla el scroll infinito
+- Aplica filtros en el servidor
+- Gestiona los estados de carga (inicial, carga adicional, error)
 
 ### Theme (`themeProvider`)
 
-- Manages dark/light theme mode
-- Persists preference with SharedPreferences
+- Gestiona el modo claro/oscuro
+- Persiste la preferencia utilizando SharedPreferences
 
-## Testing
+## Pruebas
 
-Run the test suite:
+Ejecutar la suite de tests:
 
 ```bash
 # All tests
@@ -302,16 +302,16 @@ flutter test test/domain/recipe_test.dart
 flutter test --coverage
 ```
 
-**Test Coverage**: 28 passing tests
+**Cobertura**: 28 tests exitosos
 
-- Domain models (5 tests)
-- Email/password validation (14 tests)
-- Date filtering logic (7 tests)
-- Recipe flow integration (4 tests)
+- Modelos de dominio (5)
+- Validación de email/contraseña (14)
+- Lógica de filtrado por fecha (7)
+- Flujo de recetas (4)
 
-See `test/README.md` for detailed test documentation.
+Consulta `test/README.md` para más detalles.
 
-## Project Dependencies
+## Dependencias Principales
 
 ```yaml
 dependencies:
@@ -325,39 +325,39 @@ dependencies:
   shared_preferences: ^2.2.0 # Theme persistence
 ```
 
-## Development
+## Desarrollo
 
-### Debug Logging
+### Logging de Depuración
 
-The app includes comprehensive debug logging:
+La app genera logs detallados:
 
-**Authentication**:
+**Autenticación**:
 
-- Login attempts with email/password
-- Firebase responses
-- Token storage operations
-- Auth state changes
+- Intentos de login
+- Respuestas de Firebase
+- Operaciones de almacenamiento del token
+- Cambios de estado autenticado/no autenticado
 
-**API Requests**:
+**Peticiones API**:
 
-- Request mode (mock/real API)
-- Query parameters
-- Request headers (including token)
-- Response status and body
-- Pagination details
+- Modo de la petición (mock/API real)
+- Parámetros enviados
+- Encabezados (incluyendo token)
+- Código de respuesta y cuerpo
+- Información de paginación
 
-View logs in the debug console during development.
+Revisa la consola de depuración durante el desarrollo.
 
-### Code Quality
+### Calidad de Código
 
-- ✅ No linter errors
-- ✅ Feature-based architecture
-- ✅ Separation of concerns (domain/data/application/presentation)
-- ✅ Comprehensive error handling
-- ✅ Mounted checks for async operations
-- ✅ Proper disposal of resources
+- ✅ Sin errores de linter
+- ✅ Arquitectura basada en features
+- ✅ Separación por capas (dominio/datos/aplicación/presentación)
+- ✅ Manejo completo de errores
+- ✅ Verificaciones `mounted` en operaciones asíncronas
+- ✅ Liberación correcta de recursos
 
-## Building for Production
+## Construcción para Producción
 
 ### Android
 
@@ -400,85 +400,86 @@ flutter build web --release \
   --dart-define=USE_MOCK_DATA=false
 ```
 
-## Troubleshooting
+## Solución de Problemas
 
-### Firebase Authentication Issues
+### Autenticación Firebase
 
-1. Ensure Firebase Authentication is enabled in console
-2. Add test users in Firebase Console → Authentication → Users
-3. Verify `firebase_options.dart` matches your project
+1. Verifica que Firebase Authentication esté habilitado en la consola
+2. Crea usuarios de prueba en Firebase Console → Authentication → Users
+3. Asegúrate de que `firebase_options.dart` corresponda a tu proyecto
 
-### API Connection Issues
+### Conexión con el API
 
-1. Check `API_BASE_URL` environment variable
-2. Verify backend is running and accessible
-3. Ensure Firebase ID token verification is configured on backend
-4. Check debug logs for detailed error messages
+1. Revisa la variable `API_BASE_URL`
+2. Comprueba que el backend esté operativo y accesible
+3. Valida que el backend verifique los tokens de Firebase
+4. Consulta los logs de depuración para más detalles
 
-### iOS Keychain Errors
+### Errores con el Llavero iOS
 
-The app handles iOS keychain duplicate errors gracefully. If issues persist:
+La app maneja duplicados del llavero. Si persisten los problemas:
 
-1. Clear app data/reinstall
-2. Check secure storage configuration in `auth_provider.dart`
+1. Borra los datos de la app o reinstálala
+2. Verifica la configuración de `auth_provider.dart`
 
-## Security Best Practices
+## Buenas Prácticas de Seguridad
 
-### Firebase Configuration Files
+### Archivos de Configuración Firebase
 
-The following files contain **public API keys** that are safe to commit:
+Los siguientes archivos contienen claves públicas y es seguro versionarlos:
 
 - ✅ `lib/firebase_options.dart`
 - ✅ `ios/Runner/GoogleService-Info.plist`
 - ✅ `android/app/google-services.json`
 
-These are client-side keys designed to be public. Firebase security is enforced through:
+La seguridad se garantiza mediante:
 
-1. Firebase Security Rules
-2. Backend token verification
-3. Firebase App Check (recommended)
+1. Reglas de seguridad de Firebase
+2. Verificación de tokens en el backend
+3. Firebase App Check (recomendado)
 
-### What to Keep Private
+### Qué Mantener Privado
 
-❌ **Never commit**:
+❌ **No subir nunca**:
 
-- Firebase Admin SDK service account keys (`serviceAccountKey.json`)
-- Backend `.env` files
-- Private certificates
-- Production demo credentials
+- Claves de servicio del SDK Admin (`serviceAccountKey.json`)
+- Archivos `.env` del backend
+- Certificados privados
+- Credenciales demo de producción
 
-### Demo Credentials
+### Credenciales Demo
 
-**Development/Staging**:
+**Desarrollo/Staging**:
 
 ```bash
-# Pass via command line
+# Pasar por línea de comandos
 flutter run --dart-define=DEMO_EMAIL=demo@test.com --dart-define=DEMO_PASSWORD=Test123!
 ```
 
-**Production**:
+**Producción**:
 
-- Omit `DEMO_EMAIL` and `DEMO_PASSWORD` variables
-- Demo button will not appear
-- Users must have valid Firebase accounts
+- No definir `DEMO_EMAIL` ni `DEMO_PASSWORD`
+- El botón de demo no aparecerá
+- Se requieren cuentas válidas de Firebase
 
-### Recommendations
+### Recomendaciones
 
-1. Use Firebase Security Rules for Firestore/Storage
-2. Verify ID tokens on your backend (already implemented)
-3. Enable Firebase App Check for additional security
-4. Use different Firebase projects for dev/staging/prod
-5. Never hardcode credentials in source code
+1. Configura reglas de seguridad en Firestore/Storage
+2. Valida los ID tokens en tu backend (ya implementado)
+3. Activa Firebase App Check como capa adicional
+4. Usa proyectos distintos de Firebase para dev/staging/prod
+5. Nunca incluyas credenciales en el código fuente
 
-## License
+## Licencia
 
-This project is private and not published to pub.dev.
+Proyecto privado, no publicado en pub.dev.
 
-## Support
+## Imagenes
 
-For issues or questions, check the debug console logs which provide detailed information about:
-
-- Authentication flow
-- API requests/responses
-- State management operations
-- Error details
+![App Logo](assets/login.png)
+![App Logo](assets/prescription_list.png)
+![App Logo](assets/prescription_details.png)
+![App Logo](assets/prescription_list_no_match.png)
+![App Logo](assets/ligth_mode.png)
+![App Logo](assets/loading_page.png)
+![App Logo](assets/error_page.png)
