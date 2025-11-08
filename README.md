@@ -476,10 +476,12 @@ Proyecto privado, no publicado en pub.dev.
 
 ## Imagenes
 
-![App Logo](assets/login.png)
-![App Logo](assets/prescription_list.png)
-![App Logo](assets/prescription_details.png)
-![App Logo](assets/prescription_list_no_match.png)
-![App Logo](assets/ligth_mode.png)
-![App Logo](assets/loading_page.png)
-![App Logo](assets/error_page.png)
+<p align="center">
+  <img src="assets/login.png" alt="App Login" width="300"/>
+  <img src="assets/prescription_list.png" width="300" alt="Prescription List"/>
+  <img src="assets/prescription_details.png" width="300" alt="Prescription Details"/>
+  <img src="assets/prescription_list_no_match.png" width="300" alt="Prescription List No Match"/>
+  <img src="assets/ligth_mode.png" width="300" alt="Light Mode"/>
+  <img src="assets/loading_page.png" width="300" alt="Loading Page"/>
+  <img src="assets/error_page.png" width="300" alt="Error Page"/>
+</p>
