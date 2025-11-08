@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "863358238289",
+    "project_id": "fir-recipes-app-a0c2c",
+    "storage_bucket": "fir-recipes-app-a0c2c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863358238289:android:26f859dc99bec1d7bfc270",
+        "android_client_info": {
+          "package_name": "com.example.recepies_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7vUsSq29CEUrgrySNfK7_553ZacG5BQk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

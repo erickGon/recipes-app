@@ -1,0 +1,484 @@
+# Medical Recipes App
+
+A Flutter application for managing medical prescriptions with Firebase Authentication, paginated API integration, and modern Material Design 3 UI.
+
+## Features
+
+- 🔐 **Firebase Authentication**: Email/password login with secure token storage
+- 💊 **Medical Prescriptions**: View and manage prescription records
+- 🔍 **Advanced Filtering**: Search by medication name and date range
+- 📄 **Infinite Scroll Pagination**: Automatic page loading as user scrolls
+- 🎨 **Dark/Light Theme**: Toggle with persistent preference
+- 📱 **Pull-to-Refresh**: Update data with a simple pull gesture
+- 🔒 **Secure API Calls**: Authenticated requests with Firebase ID tokens
+- 📊 **Detailed View**: Modal showing complete prescription information
+- ✅ **Comprehensive Tests**: 28 unit tests covering core functionality
+
+## Architecture
+
+Built with **Clean Architecture** using a **feature-based** folder structure:
+
+```
+lib/
+├── main.dart                          # App entry point with Firebase & theme setup
+├── firebase_options.dart              # Firebase configuration (auto-generated)
+├── core/
+│   └── theme/
+│       ├── app_theme.dart            # Light/dark theme definitions
+│       └── theme_provider.dart       # Theme state management
+└── features/
+    ├── auth/                         # Authentication feature
+    │   ├── domain/
+    │   │   └── user.dart            # User model
+    │   ├── application/
+    │   │   └── auth_provider.dart   # Auth state & Firebase integration
+    │   └── presentation/
+    │       └── login_screen.dart    # Login UI with validation
+    └── recipes/                      # Prescriptions feature
+        ├── domain/
+        │   ├── recipe.dart          # Recipe model
+        │   └── recipe_filters.dart  # Filter value object
+        ├── data/
+        │   └── recipe_api_service.dart # API client with pagination
+        ├── application/
+        │   └── recipes_provider.dart   # State management & pagination
+        └── presentation/
+            ├── recipes_list_screen.dart # Main list screen
+            └── widgets/
+                ├── recipe_card.dart        # Recipe card component
+                ├── recipe_details_modal.dart # Detail view modal
+                └── recipe_filter_section.dart # Filter UI
+```
+
+## Tech Stack
+
+- **Flutter SDK**: 3.35.7
+- **State Management**: Riverpod (2.6.1)
+- **Routing**: GoRouter (14.8.1)
+- **Backend**: Firebase (Auth, Core)
+- **Networking**: HTTP client with Bearer token auth
+- **Security**: Flutter Secure Storage for token persistence
+- **Theme**: SharedPreferences for theme persistence
+
+## Getting Started
+
+### Prerequisites
+
+- Flutter SDK 3.9.2 or higher
+- Firebase project with Authentication enabled
+- Backend API endpoint (optional - can use mock data)
+
+### Installation
+
+1. **Clone and install dependencies**:
+
+```bash
+cd recepies_app
+flutter pub get
+```
+
+2. **iOS Setup** (if running on iOS):
+
+```bash
+cd ios
+pod install
+cd ..
+```
+
+3. **Configure Firebase** (already set up):
+
+   - Android: `android/app/google-services.json` ✓
+   - iOS: `ios/Runner/GoogleService-Info.plist` ✓
+   - macOS: `macos/Runner/GoogleService-Info.plist` ✓
+
+4. **Run the app**:
+
+```bash
+# Default (with current settings)
+flutter run
+
+# With custom API endpoint
+flutter run --dart-define=API_BASE_URL=https://your-api.com --dart-define=USE_MOCK_DATA=false
+
+# With mock data
+flutter run --dart-define=USE_MOCK_DATA=true
+```
+
+## Configuration
+
+### Environment Variables
+
+The app supports compile-time environment variables for flexible configuration across different environments:
+
+#### Backend Configuration
+
+- `API_BASE_URL`: Backend API endpoint (default: `http://localhost:3000`)
+- `USE_MOCK_DATA`: Use local mock JSON instead of API (default: `false`)
+
+#### Demo Credentials (Optional)
+
+- `DEMO_EMAIL`: Email for "Use Demo Credentials" button
+- `DEMO_PASSWORD`: Password for "Use Demo Credentials" button
+
+**Note**: The demo credentials button only appears when both `DEMO_EMAIL` and `DEMO_PASSWORD` are provided. This keeps production builds clean while enabling quick testing in development.
+
+**Examples**:
+
+```bash
+# Production (no demo button)
+flutter run \
+  --dart-define=API_BASE_URL=https://api.yourcompany.com \
+  --dart-define=USE_MOCK_DATA=false
+
+# Development with demo credentials
+flutter run \
+  --dart-define=USE_MOCK_DATA=true \
+  --dart-define=DEMO_EMAIL=demo@example.com \
+  --dart-define=DEMO_PASSWORD=Test12!
+
+```
+
+### Mock Data Mode
+
+When `USE_MOCK_DATA=true`, the app loads prescriptions from `assets/mock_recipes.json` instead of making API calls. Perfect for:
+
+- Offline development
+- UI testing
+- Demo purposes
+
+## API Integration
+
+### Expected Backend Endpoints
+
+#### GET /recipes
+
+**Query Parameters**:
+
+- `medicationName` (string, optional): Filter by medication name
+- `startDate` (YYYY-MM-DD, optional): Filter from this date
+- `endDate` (YYYY-MM-DD, optional): Filter until this date
+- `page` (int, required): Page number (1-indexed)
+- `limit` (int, required): Items per page
+
+**Headers**:
+
+- `Content-Type: application/json`
+- `Authorization: Bearer <firebase_id_token>`
+
+**Response Format**:
+
+```json
+{
+  "data": [
+    {
+      "id": "uuid",
+      "patientId": "uuid",
+      "medication": "string",
+      "issuedAt": "2023-06-01T00:00:00.000Z",
+      "doctor": "string",
+      "notes": "string"
+    }
+  ],
+  "total": 200,
+  "page": 1,
+  "limit": 10,
+  "totalPages": 10
+}
+```
+
+### Firebase Token Verification (Backend)
+
+Your backend should verify Firebase ID tokens using Firebase Admin SDK:
+
+**Node.js Example**:
+
+```javascript
+const admin = require('firebase-admin');
+admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+
+app.use(async (req, res, next) => {
+  const token = req.headers.authorization?.split('Bearer ')[1];
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    req.user = decodedToken;
+    next();
+  } catch (error) {
+    res.status(401).json({ message: 'Invalid token' });
+  }
+});
+```
+
+## Usage
+
+### Login
+
+1. Enter email (format: `string@string.string`)
+2. Enter password (requirements):
+   - At least 6 characters
+   - One uppercase letter
+   - One lowercase letter
+   - One special character (!@#$%^&\*(),.?":{}|<>)
+3. Click "Sign In" or use "Use Demo Credentials"
+4. Firebase authenticates and stores token securely
+
+### Prescriptions List
+
+**Features**:
+
+- **Search**: Filter by medication name
+- **Date Range**: Select start and end dates
+- **Apply Filters**: Click button to fetch filtered results from API
+- **Clear Filters**: Reset all filters and reload data
+- **Infinite Scroll**: Automatically loads next page when scrolling near bottom
+- **Pull to Refresh**: Pull down to reload current page
+- **Details Modal**: Tap any prescription to see full details
+- **Dark Mode**: Toggle theme with persistent preference
+
+**Filter Workflow**:
+
+1. Type medication name, select dates
+2. Click "Apply Filters" → API request with query params
+3. Results load with pagination support
+4. Scroll down → auto-loads next page
+5. Pull down → refreshes current filters
+
+## Data Models
+
+### Recipe (Prescription)
+
+```dart
+class Recipe {
+  final String id;
+  final String patientId;
+  final String medication;
+  final DateTime issuedAt;
+  final String doctor;
+  final String notes;
+}
+```
+
+### User
+
+```dart
+class User {
+  final String id;
+  final String email;
+}
+```
+
+## State Management
+
+### Authentication (`authProvider`)
+
+- Manages Firebase auth state
+- Stores ID tokens in secure storage
+- Syncs with Firebase auth state changes
+- Handles login/logout
+
+### Recipes Pagination (`recipesPaginationProvider`)
+
+- Manages paginated recipe list
+- Handles infinite scroll
+- Applies server-side filtering
+- Tracks loading states (initial, loading more, error)
+
+### Theme (`themeProvider`)
+
+- Manages dark/light theme mode
+- Persists preference with SharedPreferences
+
+## Testing
+
+Run the test suite:
+
+```bash
+# All tests
+flutter test
+
+# Specific test file
+flutter test test/domain/recipe_test.dart
+
+# With coverage
+flutter test --coverage
+```
+
+**Test Coverage**: 28 passing tests
+
+- Domain models (5 tests)
+- Email/password validation (14 tests)
+- Date filtering logic (7 tests)
+- Recipe flow integration (4 tests)
+
+See `test/README.md` for detailed test documentation.
+
+## Project Dependencies
+
+```yaml
+dependencies:
+  flutter_riverpod: ^2.6.1 # State management
+  go_router: ^14.2.7 # Routing
+  firebase_core: ^3.6.0 # Firebase core
+  firebase_auth: ^5.3.1 # Firebase authentication
+  flutter_secure_storage: ^9.2.2 # Secure token storage
+  intl: ^0.19.0 # Date formatting
+  http: ^1.2.0 # API calls
+  shared_preferences: ^2.2.0 # Theme persistence
+```
+
+## Development
+
+### Debug Logging
+
+The app includes comprehensive debug logging:
+
+**Authentication**:
+
+- Login attempts with email/password
+- Firebase responses
+- Token storage operations
+- Auth state changes
+
+**API Requests**:
+
+- Request mode (mock/real API)
+- Query parameters
+- Request headers (including token)
+- Response status and body
+- Pagination details
+
+View logs in the debug console during development.
+
+### Code Quality
+
+- ✅ No linter errors
+- ✅ Feature-based architecture
+- ✅ Separation of concerns (domain/data/application/presentation)
+- ✅ Comprehensive error handling
+- ✅ Mounted checks for async operations
+- ✅ Proper disposal of resources
+
+## Building for Production
+
+### Android
+
+```bash
+# Production build (no demo button)
+flutter build apk --release \
+  --dart-define=API_BASE_URL=https://your-api.com \
+  --dart-define=USE_MOCK_DATA=false
+
+# Staging build (with demo button)
+flutter build apk --release \
+  --dart-define=API_BASE_URL=https://staging-api.com \
+  --dart-define=USE_MOCK_DATA=false \
+  --dart-define=DEMO_EMAIL=demo@example.com \
+  --dart-define=DEMO_PASSWORD=Test123!
+```
+
+### iOS
+
+```bash
+# Production build (no demo button)
+flutter build ios --release \
+  --dart-define=API_BASE_URL=https://your-api.com \
+  --dart-define=USE_MOCK_DATA=false
+
+# Staging build (with demo button)
+flutter build ios --release \
+  --dart-define=API_BASE_URL=https://staging-api.com \
+  --dart-define=USE_MOCK_DATA=false \
+  --dart-define=DEMO_EMAIL=demo@example.com \
+  --dart-define=DEMO_PASSWORD=Test123!
+```
+
+### Web
+
+```bash
+# Production build (no demo button)
+flutter build web --release \
+  --dart-define=API_BASE_URL=https://your-api.com \
+  --dart-define=USE_MOCK_DATA=false
+```
+
+## Troubleshooting
+
+### Firebase Authentication Issues
+
+1. Ensure Firebase Authentication is enabled in console
+2. Add test users in Firebase Console → Authentication → Users
+3. Verify `firebase_options.dart` matches your project
+
+### API Connection Issues
+
+1. Check `API_BASE_URL` environment variable
+2. Verify backend is running and accessible
+3. Ensure Firebase ID token verification is configured on backend
+4. Check debug logs for detailed error messages
+
+### iOS Keychain Errors
+
+The app handles iOS keychain duplicate errors gracefully. If issues persist:
+
+1. Clear app data/reinstall
+2. Check secure storage configuration in `auth_provider.dart`
+
+## Security Best Practices
+
+### Firebase Configuration Files
+
+The following files contain **public API keys** that are safe to commit:
+
+- ✅ `lib/firebase_options.dart`
+- ✅ `ios/Runner/GoogleService-Info.plist`
+- ✅ `android/app/google-services.json`
+
+These are client-side keys designed to be public. Firebase security is enforced through:
+
+1. Firebase Security Rules
+2. Backend token verification
+3. Firebase App Check (recommended)
+
+### What to Keep Private
+
+❌ **Never commit**:
+
+- Firebase Admin SDK service account keys (`serviceAccountKey.json`)
+- Backend `.env` files
+- Private certificates
+- Production demo credentials
+
+### Demo Credentials
+
+**Development/Staging**:
+
+```bash
+# Pass via command line
+flutter run --dart-define=DEMO_EMAIL=demo@test.com --dart-define=DEMO_PASSWORD=Test123!
+```
+
+**Production**:
+
+- Omit `DEMO_EMAIL` and `DEMO_PASSWORD` variables
+- Demo button will not appear
+- Users must have valid Firebase accounts
+
+### Recommendations
+
+1. Use Firebase Security Rules for Firestore/Storage
+2. Verify ID tokens on your backend (already implemented)
+3. Enable Firebase App Check for additional security
+4. Use different Firebase projects for dev/staging/prod
+5. Never hardcode credentials in source code
+
+## License
+
+This project is private and not published to pub.dev.
+
+## Support
+
+For issues or questions, check the debug console logs which provide detailed information about:
+
+- Authentication flow
+- API requests/responses
+- State management operations
+- Error details

@@ -1,0 +1,41 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "fir-recipes-app-a0c2c",
+          "appId": "1:863358238289:android:26f859dc99bec1d7bfc270",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "fir-recipes-app-a0c2c",
+          "appId": "1:863358238289:ios:228ff59da299c906bfc270",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "fir-recipes-app-a0c2c",
+          "appId": "1:863358238289:ios:228ff59da299c906bfc270",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "fir-recipes-app-a0c2c",
+          "configurations": {
+            "android": "1:863358238289:android:26f859dc99bec1d7bfc270",
+            "ios": "1:863358238289:ios:228ff59da299c906bfc270",
+            "macos": "1:863358238289:ios:228ff59da299c906bfc270",
+            "web": "1:863358238289:web:8873cabefdd63a04bfc270",
+            "windows": "1:863358238289:web:e81a7e49710a4cabbfc270"
+          }
+        }
+      }
+    }
+  }
+}
